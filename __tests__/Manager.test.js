@@ -1,8 +1,3 @@
-test('TODO', () => {
-    expect(1 === 1).toBe(true);
-});
-
-const { default: test } = require("node:test");
 const Manager = require("../lib/Manager");
 
 let manager = new Manager(
@@ -12,5 +7,3 @@ let manager = new Manager(
 test('Manager should be created', () => {
     expect(manager instanceof Manager).toBe(true);
 });
-
-//officenumber?

@@ -1,8 +1,3 @@
-test('TODO', () => {
-    expect(1 === 1).toBe(true);
-});
-
-const { default: test } = require("node:test");
 const Intern = require("../lib/Intern");
 
 let intern = new Intern(
@@ -14,5 +9,5 @@ test('Intern should be created', () => {
 });
 
 test('getSchool should return University of Denver', () => {
-    expect(intern.getSchool()).toBe('Universtiy of Denver');
+    expect(intern.getSchool()).toBe('University of Denver');
 });

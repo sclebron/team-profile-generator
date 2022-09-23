@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
 const { choices } = require('yargs');
 const  Manager  = require('./lib/Manager');
+const  Engineer  = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
 const fs = require('fs');
 
 const initialQuestions = [
@@ -86,7 +88,7 @@ const internQuestions = [
     {
         type: 'list',
         message: 'Would you like to add Employees?',
-        name : 'engineersChoice',
+        name : 'internsChoice',
         choices: ["Yes","No"],
     },
 ];
@@ -103,7 +105,7 @@ async function init(){
     
     if(initialAnswers.managersChoice === "Yes"){
 
-        let addingMoreEmployees = true;
+        var addingMoreEmployees = true;
         while(addingMoreEmployees){
             let employeeTypeAnswer = await inquirer.prompt([
                 {
@@ -117,27 +119,23 @@ async function init(){
             if(employeeTypeAnswer.choice == "Engineer"){
                 // ask engineer questions
                 let answers = await inquirer.prompt(engineerQuestions); // this is equal to inquirer.prompt(engineerQuestions)
-                let engineer = new Engineer(engineerQuestions.engineersName, engineerQuestions.engineersId, engineerQuestions.engineersEmail, engineersQuestions.engineersGit); // use the answers
+                let engineer = new Engineer(answers.engineersName, answers.engineersId, answers.engineersEmail, answers.engineersGit); // use the answers
                 employees.push(engineer);
-                if(answers.engineerQuestions == "No"){
+                if(answers.engineersChoice === "No"){
                     addingMoreEmployees = false;
                     break;
                 }
             } else{
                 // ask intern questions
                 let answers = await inquirer.prompt(internQuestions);
-                let intern = new Intern(internQuestions.internsName, internQuestions.internsId, internQuestions.internsEmail, internQuestions.internsSchool); // use the answers
+
+                let intern = new Intern(answers.internsName, answers.internsId, answers.internsEmail, answers.internsSchool); // use the answers
                 employees.push(intern);
-                if(answers.internQuestions == "No"){
+                if(answers.internsChoice === "No"){
                     addingMoreEmployees = false;
                     break;
                 }
             }
-
-
-
-
-            
         }
     }
 
@@ -149,6 +147,5 @@ async function init(){
 }
 
 function renderHtml(employees){
-    // fs.writeFile(``);
     console.log('render html here');
 }

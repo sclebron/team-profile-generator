@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { choices } = require('yargs');
+// const { choices } = require('yargs');
 const  Manager  = require('./lib/Manager');
 const  Engineer  = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
@@ -139,13 +139,17 @@ async function init(){
         }
     }
 
+return writeFile;
 
-    renderHtml(employees);
+};
 
-    
-
-}
-
-function renderHtml(employees){
-    console.log('render html here');
-}
+const writeFile = data => {
+    fs.writeFile('./dist/index.html', data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log("Team profile HTML has been generated!")
+        }
+    })
+};

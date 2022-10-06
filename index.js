@@ -1,9 +1,14 @@
 const inquirer = require('inquirer');
 // const { choices } = require('yargs');
+const Employee = require('./lib/Employee');
 const  Manager  = require('./lib/Manager');
 const  Engineer  = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const fs = require('fs');
+const path = require('path');
+const renderTeamHtml = require('./src/generateHTML');
+const OUT_DIRECTORY = path.resolve(__dirname, 'output');
+const outputPath = path.join(OUT_DIRECTORY, 'team.html');
 
 const initialQuestions = [
     { 
@@ -125,7 +130,7 @@ async function init(){
                     addingMoreEmployees = false;
                     break;
                 }
-            } else{
+            } else {
                 // ask intern questions
                 let answers = await inquirer.prompt(internQuestions);
 
@@ -139,17 +144,11 @@ async function init(){
         }
     }
 
-return writeFile;
+createTeamHTML();
 
 };
 
-const writeFile = data => {
-    fs.writeFile('./dist/index.html', data, err => {
-        if (err) {
-            console.log(err);
-            return;
-        } else {
-            console.log("Team profile HTML has been generated!")
-        }
-    })
+function createTeamHTML() {
+    console.log("Creating HTML...", employees);
+    fs.writeFileSync(outputPath, renderTeamHtml(employees));
 };

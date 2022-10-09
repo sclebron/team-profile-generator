@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
 // const { choices } = require('yargs');
-const Employee = require('./lib/Employee');
 const  Manager  = require('./lib/Manager');
 const  Engineer  = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
@@ -102,7 +101,7 @@ init()
 
 async function init(){
     let initialAnswers = await inquirer.prompt(initialQuestions);
-    let employees = [];
+    const employees = [];
 
     let manager = new Manager(initialAnswers.managersName,initialAnswers.managersId, initialAnswers.managersEmail, initialAnswers.managersId, initialAnswers.managersOffice)
 

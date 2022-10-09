@@ -4,10 +4,7 @@ const  Manager  = require('./lib/Manager');
 const  Engineer  = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const fs = require('fs');
-const path = require('path');
-const renderTeamHtml = require('./src/generateHTML');
-const OUT_DIRECTORY = path.resolve(__dirname, 'output');
-const outputPath = path.join(OUT_DIRECTORY, 'team.html');
+const generateHTML = require('./src/generateHTML');
 
 const initialQuestions = [
     { 
@@ -97,7 +94,7 @@ const internQuestions = [
     },
 ];
 
-init()
+// init()
 
 async function init(){
     let initialAnswers = await inquirer.prompt(initialQuestions);
@@ -143,11 +140,28 @@ async function init(){
         }
     }
 
-createTeamHTML();
+// writeFile();
 
 };
 
-function createTeamHTML() {
-    console.log("Creating HTML...", employees);
-    fs.writeFileSync(outputPath, renderTeamHtml(employees));
+const writeFile = data => {
+    fs.writeFile('./dist/index.html', data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log('Team profile has been created!')
+        }
+    })
 };
+
+init()
+.then(employees => {
+    return generateHTML(employees);
+})
+.then(pageHTML => {
+    return writeFile(pageHTML)
+})
+.catch(err => {
+    console.log(err);
+});

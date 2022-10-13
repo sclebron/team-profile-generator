@@ -1,10 +1,32 @@
 const inquirer = require('inquirer');
-// const { choices } = require('yargs');
+const util = require('util');
 const  Manager  = require('./lib/Manager');
 const  Engineer  = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const fs = require('fs');
-const generateHTML = require('./src/generateHTML');
+const html = require('./src/htmlTemp');
+
+const writeFileAsync = util.promisify(fs.writeFile);
+
+let teamArray = [];
+let teamString = ``;
+
+async function generate() {
+    try {
+        await init()
+
+        for (let i = 0; i < teamArray.length; i++) {
+            teamString = teamString + html.generateCard(teamArray[i])
+        };
+
+        let finalHtml = html.generateHTML(teamString)
+
+        writeFileAsync('./dist/index.html', finalHtml);
+
+    } catch (err) {
+        return console.log(err);
+    }
+}
 
 const initialQuestions = [
     { 
@@ -94,15 +116,12 @@ const internQuestions = [
     },
 ];
 
-// init()
-
 async function init(){
     let initialAnswers = await inquirer.prompt(initialQuestions);
-    const employees = [];
 
     let manager = new Manager(initialAnswers.managersName,initialAnswers.managersId, initialAnswers.managersEmail, initialAnswers.managersId, initialAnswers.managersOffice)
 
-    employees.push(manager);
+    teamArray.push(manager);
     
     if(initialAnswers.managersChoice === "Yes"){
 
@@ -121,7 +140,7 @@ async function init(){
                 // ask engineer questions
                 let answers = await inquirer.prompt(engineerQuestions); // this is equal to inquirer.prompt(engineerQuestions)
                 let engineer = new Engineer(answers.engineersName, answers.engineersId, answers.engineersEmail, answers.engineersGit); // use the answers
-                employees.push(engineer);
+                teamArray.push(engineer);
                 if(answers.engineersChoice === "No"){
                     addingMoreEmployees = false;
                     break;
@@ -131,7 +150,7 @@ async function init(){
                 let answers = await inquirer.prompt(internQuestions);
 
                 let intern = new Intern(answers.internsName, answers.internsId, answers.internsEmail, answers.internsSchool); // use the answers
-                employees.push(intern);
+                teamArray.push(intern);
                 if(answers.internsChoice === "No"){
                     addingMoreEmployees = false;
                     break;
@@ -140,28 +159,7 @@ async function init(){
         }
     }
 
-// writeFile();
-
 };
 
-const writeFile = data => {
-    fs.writeFile('./dist/index.html', data, err => {
-        if (err) {
-            console.log(err);
-            return;
-        } else {
-            console.log('Team profile has been created!')
-        }
-    })
-};
+generate();
 
-init()
-.then(employees => {
-    return generateHTML(employees);
-})
-.then(pageHTML => {
-    return writeFile(pageHTML)
-})
-.catch(err => {
-    console.log(err);
-});
